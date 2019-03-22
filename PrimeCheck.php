@@ -3,11 +3,6 @@
 // This piece of code checks whether a number is prime, returns true if the number is a prime number and false if otherwise without any loop;
 class PrimeCheck 
 {
-    public $number;
-    public $modarray= [];
-    public $result = [];
-    
-
     
     public function isprime($num)
     {
@@ -15,27 +10,27 @@ class PrimeCheck
         if($num == 2 || $num == 3 || $num == 5 || $num == 7 ){
             return true;
         }else{
-            $this->number = $num;
+            
        
             $div = [2,3,4,5,6,7,8,9,10];
-            array_walk($div,function($item){
-               
-                $this->modarray[] =  $this->number/$item;
-                return $this->modarray;
+            $modarray= [];
+            array_walk($div,function($item) use($num,&$modarray) {
+                $modarray[] =  $num/$item;
+                return $modarray;
             });
-           
-           array_walk($this->modarray,function($item){
+            $result = [];
+           array_walk($modarray,function($item) use(&$result){
                if(strpos($item,".") !== false){
                 
-                    $this->result[] = "false";
+                    $result[] = "false";
                 
                }else{
-                    $this->result[] = "true";
+                    $result[] = "true";
                }
                 
-                    return $this->result;
+                    return $result;
             });
-           if(in_array("true",$this->result)){
+           if(in_array("true",$result)){
                return false;
            }else{
                return true;
@@ -54,7 +49,7 @@ class PrimeCheck
 
         $check = new PrimeCheck();
         // pass the number to check as an argument to the @isprime method 
-        $bool =  $check->isprime(37);
+        $bool =  $check->isprime(1231);
         if($bool){
            echo "true";
         }else{
