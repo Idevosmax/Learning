@@ -1,32 +1,61 @@
 <?php
 
 // This piece of code checks whether a number is prime, returns true if the number is a prime number and false if otherwise without any loop;
-class PrimeCheck 
+class PrimeCheck
 {
-    public function isprime($num)
+    private $biggestPrime = 1;
+    private $primes = [];
+
+    /**
+    * Generates a list of primes that are greater than the $current up to $num
+    */
+    private function generatePrimes(int $current, int $num)
     {
-        
-        if($num == 2 || $num == 3 || $num == 5 || $num == 7 || $num == 11 || $num == 13 || $num == 17 || $num == 19 || $num == 23 || $num == 29 ){
-            return true;
-         } else if(is_int(sqrt($num))){
-            return true;
+        $top = sqrt($num);
+        if ($current > $top) {
+            return $this->primes;
         }
-        else{
-            $div = [2,3,4,5,6,7,8,9,10,11,13,17,19,23,29];
+        if ($this->isprime($current)) {
+            $this->primes[] = $current;
+            $this->biggestPrime = $current;
+        }
+        $this->generatePrimes($current + 1, $num);
+
+        return $this->primes;
+    }
+
+    public function isprime(int $num): bool
+    {
+        if ($num == 2) {
+            return true;
+        } else {
+            $primesToCheck = $this->generatePrimes($this->biggestPrime + 1, $num);
             $divisible = array_map(
-                function($item) use ($num) { return is_int($num/$item); }, 
-                $div
+                function ($item) use ($num) {
+                    return is_int($num / $item);
+                },
+                $primesToCheck
             );
-           return !in_array(true, $divisible);
+            return !in_array(true, $divisible);
         }
     }
 }
-
 $check = new PrimeCheck();
-// pass the number to check as an argument to the @isprime method 
-$bool =  $check->isprime(11);
-if($bool){
-   echo "true";
-}else{
-   echo "false";
+
+// pass the number to check as an argument to the @isprime method
+// This number should not be prime.
+$bool = $check->isprime(522);
+if ($bool) {
+    echo "true";
+} else {
+    echo "false";
+}
+echo PHP_EOL;
+
+// This number should be prime
+$bool = $check->isprime(521);
+if ($bool) {
+    echo "true";
+} else {
+    echo "false";
 }
